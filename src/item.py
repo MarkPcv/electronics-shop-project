@@ -1,9 +1,26 @@
+from csv import DictReader
+
 class Item:
     """
     Класс для представления товара в магазине.
     """
     pay_rate = 1.0
     all = []
+
+    @classmethod
+    def instantiate_from_csv(cls) -> None:
+        """
+        Creates class instances from CSV file
+        """
+        cls.all = []  # clear list of instances
+        PATH = '../src/items.csv'  # path to csv file
+        ENCODING = 'windows-1251'  # encoding for csv file
+
+        # read each row of csv file and create a new instance
+        with open(PATH, newline='', encoding=ENCODING) as csvfile:
+            reader = DictReader(csvfile)
+            for row in reader:
+                Item(row['name'], float(row['price']), int(row['quantity']))
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
