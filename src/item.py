@@ -7,6 +7,15 @@ class Item:
     pay_rate = 1.0
     all = []
 
+    @staticmethod
+    def string_to_number(string: str) -> int:
+        """
+        Converts string to integer
+        Caution: if string represents float function will round it down
+        Example: '5.999' returns 5
+        """
+        return int(float(string))
+
     @classmethod
     def instantiate_from_csv(cls) -> None:
         """
@@ -58,7 +67,9 @@ class Item:
 
     @name.setter
     def name(self, new_name: str) -> None:
-        """Set name property of class instance"""
+        """
+        Setter for attribute "name"
+        """
         try:
             if len(new_name) <= 10:
                 self.__name = new_name
