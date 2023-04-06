@@ -13,7 +13,7 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+        self.__name = name        # private attribute
         self.price = price
         self.quantity = quantity
         Item.all.append(self)
@@ -31,3 +31,21 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price *= self.pay_rate
+
+    @property
+    def name(self) -> str:
+        """
+        Getter for attribute "name"
+        """
+        return self.__name
+
+    @name.setter
+    def name(self, new_name: str) -> None:
+        """Set name property of class instance"""
+        try:
+            if len(new_name) <= 10:
+                self.__name = new_name
+            else:
+                raise ValueError
+        except ValueError:
+            print("Name must contain no more than 10 characters")
