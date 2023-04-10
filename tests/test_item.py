@@ -79,3 +79,17 @@ def test_name_setter(item_bag):
     # Check exception for >10 chars
     item_bag.name = 'SuperPuperBag'
     assert item_bag.name == 'Box'
+
+
+def test_item_repr(item_bag):
+    """
+    Checks __repr__ dunder-method
+    """
+    assert repr(item_bag) == "Item('Bag', 1000, 5)"
+
+
+def test_item_str(item_book):
+    """
+    Checks __str__ dunder-method
+    """
+    assert str(item_book) == "Book"
