@@ -89,3 +89,9 @@ class Item:
                 raise ValueError
         except ValueError:
             print("Name must contain no more than 10 characters")
+
+    def __add__(self, other):
+        if isinstance(other, Item):
+            return self.quantity + other.quantity
+        else:
+            raise ValueError('You cannot add different classes')
