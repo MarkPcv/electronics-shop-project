@@ -1,6 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 import pytest
 from src.item import Item
+from src.phone import Phone
 
 
 @pytest.fixture
@@ -12,6 +13,9 @@ def item_book():
 def item_bag():
     return Item("Bag", 1000, 5)
 
+@pytest.fixture
+def phone():
+    return Phone('iPhone', 70000, 20, 1)
 
 def test_show_all(item_book, item_bag):
     """
@@ -93,3 +97,15 @@ def test_item_str(item_book):
     Checks __str__ dunder-method
     """
     assert str(item_book) == "Book"
+
+
+def test_item_add(item_book, phone):
+    """
+    Check __add__ dunder-method
+    """
+    integer_object = 30
+    assert item_book + phone == 30
+    assert phone + phone == 40
+    assert phone + item_book == 30
+    with pytest.raises(ValueError):
+        phone + integer_object
