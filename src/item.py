@@ -1,5 +1,12 @@
 from csv import DictReader
 
+class InstantiateCSVError(Exception):
+    def __init__(self, *args, **kwargs):
+        self.message = args[0] if args else "Файл item.csv поврежден"
+
+    def __str__(self):
+        return self.message
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -25,11 +32,24 @@ class Item:
         PATH = '../src/items.csv'  # path to csv file
         ENCODING = 'windows-1251'  # encoding for csv file
 
-        # read each row of csv file and create a new instance
-        with open(PATH, newline='', encoding=ENCODING) as csvfile:
-            reader = DictReader(csvfile)
-            for row in reader:
-                Item(row['name'], float(row['price']), int(row['quantity']))
+        try:
+            open(PATH, newline='', encoding=ENCODING)
+        except FileNotFoundError:
+            print(FileNotFoundError("Отсутствует файл items.csv"))
+        else:
+            # read each row of csv file and create a new instance
+            with open(PATH, newline='', encoding=ENCODING) as csvfile:
+                reader = DictReader(csvfile)
+                for row in reader:
+                    try:
+                        Item(row['name'],
+                             float(row['price']),
+                             int(row['quantity']))
+                    except ValueError:
+                        print(InstantiateCSVError())
+                    except TypeError:
+                        print(InstantiateCSVError())
+
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
