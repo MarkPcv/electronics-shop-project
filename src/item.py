@@ -1,11 +1,22 @@
 from csv import DictReader
 
 class InstantiateCSVError(Exception):
+    """
+    Class for tracking exceptions during CSV reading
+    """
     def __init__(self, *args, **kwargs):
-        self.message = args[0] if args else "Файл item.csv поврежден"
+        self.message = args[0] if args else "File 'item.csv' is corrupted"
 
-    def __str__(self):
-        return self.message
+class ItemHandler:
+    """
+    Class handler for processing data from a CSV file
+    """
+    def __init__(self, row: dict):
+
+        if not row['price'].replace('.', '').isnumeric():
+            raise InstantiateCSVError
+        elif not row['quantity'].isnumeric():
+            raise InstantiateCSVError
 
 class Item:
     """
@@ -24,31 +35,31 @@ class Item:
         return int(float(string))
 
     @classmethod
-    def instantiate_from_csv(cls) -> None:
+    def instantiate_from_csv(cls, path:str = '../src/items.csv') -> None:
         """
         Creates class instances from CSV file
         """
         cls.all = []  # clear list of instances
-        PATH = '../src/items.csv'  # path to csv file
+        PATH = path  # path to csv file
         ENCODING = 'windows-1251'  # encoding for csv file
 
         try:
             open(PATH, newline='', encoding=ENCODING)
         except FileNotFoundError:
-            print(FileNotFoundError("Отсутствует файл items.csv"))
+            raise FileNotFoundError("File 'items.csv' does not exist")
         else:
             # read each row of csv file and create a new instance
             with open(PATH, newline='', encoding=ENCODING) as csvfile:
                 reader = DictReader(csvfile)
                 for row in reader:
                     try:
+                        ItemHandler(row)
+                    except InstantiateCSVError:
+                        raise InstantiateCSVError()
+                    else:
                         Item(row['name'],
                              float(row['price']),
                              int(row['quantity']))
-                    except ValueError:
-                        print(InstantiateCSVError())
-                    except TypeError:
-                        print(InstantiateCSVError())
 
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
